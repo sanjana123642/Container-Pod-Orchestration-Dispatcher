@@ -1,353 +1,321 @@
-KubeRoute — Container Pod Orchestration Dispatcher
 2.1 Project Title
 
-KubeRoute — Container Pod Orchestration Dispatcher
-
-A cloud container orchestration platform inspired by modern systems like Kubernetes and Amazon ECS. The project demonstrates how multiple Data Structures and Algorithms work together to manage services, containers, servers, routing, and workload distribution efficiently.
+KubeRoute – Container Pod Orchestration Dispatcher Using Data Structures and Algorithms in C++
 
 2.2 Problem Statement
 
-Modern cloud platforms manage thousands of containers running across hundreds of servers. Traditional approaches face several challenges:
+Modern cloud platforms such as Kubernetes and Docker Swarm manage thousands of containers across distributed servers. Efficient orchestration requires fast service discovery, workload distribution, configuration rollback, routing optimization, and resource scheduling.
 
-Slow service name searches.
-No efficient rollback mechanism for failed configuration changes.
-Pod launch requests are not processed in submission order.
-Container-to-server lookup is inefficient.
-Resource-heavy containers cannot be ranked quickly.
-Network topology between servers is not modeled effectively.
-Minimum latency communication paths cannot be identified easily.
-Workloads are not distributed evenly among servers.
+Traditional approaches may suffer from inefficient searches, poor load balancing, and increased routing latency. Therefore, there is a need for a system that demonstrates how fundamental Data Structures and Algorithms (DSA) can be applied to solve real-world cloud orchestration problems efficiently.
 
-KubeRoute addresses these challenges using specialized Data Structures and Algorithms optimized for each operation.
+The KubeRoute project simulates a container orchestration platform by integrating multiple DSA concepts such as Trie, Stack, Queue, Hash Map, Heap, Graph, and Dijkstra’s Algorithm.
 
 2.3 Objectives
 
-The main objectives of KubeRoute are:
+The main objectives of the project are:
 
-Implement fast service discovery using Trie.
-Support configuration rollback using Stack.
-Maintain ordered pod execution using Queue.
-Enable instant container lookup using Hash Map.
-Rank containers by memory requirements using Min Heap.
-Model server connectivity using Graphs.
-Find minimum-latency routes using Dijkstra’s Algorithm.
-Balance workloads across servers using Min Heap.
-Demonstrate practical applications of DSA concepts in cloud computing systems.
+To implement a cloud-inspired container orchestration system.
+To demonstrate practical applications of Data Structures and Algorithms.
+To provide efficient service discovery using Trie.
+To maintain configuration rollback history using Stack.
+To process pod launch requests using Queue.
+To manage container-server mappings using Hash Maps.
+To prioritize containers using Min-Heaps.
+To represent server topology using Graphs.
+To find shortest network paths using Dijkstra's Algorithm.
+To distribute workloads evenly across servers using Heap-based Load Balancing.
 2.4 System Overview / Architecture
-                     +-------------------+
-                     |  Service Catalog  |
-                     |      (Trie)       |
-                     +---------+---------+
-                               |
-                               v
-+-------------+      +-------------------+      +-------------+
-| Change Log  | ---> | KubeRoute Core    | <--- | Pod Queue   |
-|  (Stack)    |      |   Dispatcher      |      |  (Queue)    |
-+-------------+      +-------------------+      +-------------+
-                               |
-      -----------------------------------------------------
-      |                   |                  |            |
-      v                   v                  v            v
-+-----------+     +--------------+   +-------------+ +-------------+
-| Hash Map  |     | Min Heap     |   | Graph       | | Load Heap   |
-| Identity  |     | Sorter       |   | + Dijkstra  | | Balancer    |
-+-----------+     +--------------+   +-------------+ +-------------+
-Architecture Components
-Subsystem	Data Structure	Purpose
-Catalog Listing	Trie	Prefix-based service search
-Change Log	Stack	Configuration rollback
-Execution Line	Queue	FIFO pod execution
-Architecture Identity	Hash Map	Container lookup
-Container Sorter	Min Heap	Memory-based ranking
-Server Mesh	Graph	Network topology
-Transit Path	Dijkstra Algorithm	Shortest path routing
-Workload Balancer	Min Heap	Even workload distribution
+
+The KubeRoute system consists of eight interconnected subsystems:
+
+                     +----------------------+
+                     |   KubeRoute System   |
+                     +----------+-----------+
+                                |
+      ---------------------------------------------------------
+      |         |         |         |         |        |       |
+      V         V         V         V         V        V       V
+
+ Service    Change    Execution  Container  Container Server  Workload
+ Catalog     Log        Line      Registry   Sorter    Mesh   Balancer
+
+  (Trie)    (Stack)    (Queue)   (HashMap) (MinHeap) (Graph) (MinHeap)
+                                                    |
+                                                    V
+                                            Dijkstra Algorithm
+Subsystems
+Subsystem	Data Structure
+Catalog Listing	Trie
+Change Log	Stack
+Execution Line	Queue
+Architecture Identity	Hash Map
+Container Sorter	Min Heap
+Server Mesh	Graph (Adjacency List)
+Transit Path	Dijkstra Algorithm
+Workload Balancer	Min Heap
 2.5 Data Structures and Algorithms Used
 1. Trie (Prefix Tree)
 
-Used for service name discovery.
+Purpose:
+
+Service registration
+Prefix-based service search
+
+Operations:
+
+Insert Service
+Exact Search
+Prefix Search
+Delete Service
+
+Complexity:
+
+Operation	Complexity
+Insert	O(L)
+Search	O(L)
+Prefix Search	O(L + K)
+2. Stack
+
+Purpose:
+
+Configuration history
+Rollback mechanism
+
+Operations:
+
+Push Configuration
+Rollback
+View Current Configuration
+
+Complexity:
+
+Operation	Complexity
+Push	O(1)
+Pop	O(1)
+Peek	O(1)
+3. Queue
+
+Purpose:
+
+FIFO Pod Scheduling
+
+Operations:
+
+Enqueue Request
+Dequeue Request
+Process Requests
+
+Complexity:
+
+Operation	Complexity
+Enqueue	O(1)
+Dequeue	O(1)
+4. Hash Map
+
+Purpose:
+
+Container-to-Server Mapping
+
+Operations:
+
+Register Container
+Lookup Container
+Remove Container
+
+Complexity:
+
+Operation	Complexity
+Insert	O(1) Average
+Lookup	O(1) Average
+Delete	O(1) Average
+5. Min Heap
+
+Purpose:
+
+Container Ranking
+Workload Balancing
+
+Operations:
+
+Insert
+Extract Minimum
+Priority Scheduling
+
+Complexity:
+
+Operation	Complexity
+Insert	O(log N)
+Extract Min	O(log N)
+Peek	O(1)
+6. Graph (Adjacency List)
+
+Purpose:
+
+Network Topology Representation
+
+Complexity:
+
+Operation	Complexity
+Add Vertex	O(1)
+Add Edge	O(1)
+Space	O(V + E)
+7. Dijkstra’s Algorithm
+
+Purpose:
+
+Minimum latency path computation
+
+Complexity:
+
+Operation	Complexity
+Shortest Path	O((V+E) log V)
+2.6 Implementation Approach
+Step 1: Service Registration
+
+Services are stored in a Trie to support fast prefix searches.
 
 Example:
 
-payment-svc
-payment-gateway
-payment-callback
+catalog.insert("payment-svc");
+catalog.insert("auth-service");
+Step 2: Configuration Tracking
 
-Searching "pay" returns all matching services efficiently.
+Each configuration update is pushed onto a Stack.
 
-Complexity
+changeLog.applyChange(config);
 
-Insert: O(L)
-Search: O(L + K)
+Rollback is achieved using:
+
+changeLog.rollback();
+Step 3: Pod Scheduling
+
+Pod requests are stored in a Queue and processed in FIFO order.
+
+execLine.enqueue(request);
+execLine.processAll();
+Step 4: Container Mapping
+
+Containers are mapped to servers using Hash Maps.
+
+identity.registerContainer(id, server);
+Step 5: Container Prioritization
+
+Containers are inserted into a Min Heap based on memory requirements.
+
+sorter.addContainer(container);
+Step 6: Network Routing
+
+A weighted graph represents server connections.
+
+mesh.addLink(0,1,2);
+
+Shortest path is computed using Dijkstra.
+
+mesh.shortestPath(0,4);
+Step 7: Load Balancing
+
+Pods are assigned to the least-loaded server.
+
+balancer.assignPod("pod-001");
+2.7 Time and Space Complexity Analysis
+Subsystem	Time Complexity	Space Complexity
+Trie Search	O(L + K)	O(N×L)
+Stack Rollback	O(1)	O(H)
+Queue Processing	O(1)	O(Q)
+Hash Map Lookup	O(1) Avg	O(N)
+Heap Insert	O(log N)	O(N)
+Heap Extract	O(log N)	O(N)
+Graph Storage	O(V+E)	O(V+E)
+Dijkstra	O((V+E)logV)	O(V)
+Load Balancer	O(log N)	O(N)
 
 Where:
 
-L = length of prefix
-K = matching results
-2. Stack
-
-Used for configuration rollback.
-
-Example:
-
-Config V1
-Config V2
-Config V3
-
-Rollback sequence:
-
-Undo V3
-Undo V2
-
-Complexity
-
-Push: O(1)
-Pop: O(1)
-3. Queue
-
-Used for pod launch scheduling.
-
-Example:
-
-Pod A
-Pod B
-Pod C
-
-Execution:
-
-A → B → C
-
-Complexity
-
-Enqueue: O(1)
-Dequeue: O(1)
-4. Hash Map
-
-Used for container-to-server mapping.
-
-Example:
-
-Container-001 → Server-7
-Container-002 → Server-3
-
-Complexity
-
-Insert: O(1)
-Search: O(1)
-
-Average Case
-
-5. Min Heap
-
-Used for container ranking based on memory requirements.
-
-Example:
-
-64 MB
-128 MB
-256 MB
-512 MB
-
-Containers with smaller memory requirements are scheduled first.
-
-Complexity
-
-Insert: O(log N)
-Extract Min: O(log N)
-6. Graph (Adjacency List)
-
-Represents server network topology.
-
-Example:
-
-Server A ---- 2ms ---- Server B
-     |
-    10ms
-     |
-Server C
-
-Complexity
-
-Storage: O(V + E)
-7. Dijkstra's Algorithm
-
-Finds minimum-latency routes.
-
-Example:
-
-Server A → Server B → Server D
-
-instead of
-
-Server A → Server D
-
-if total latency is lower.
-
-Complexity
-
-O((V + E) log V)
-8. Min Heap Workload Balancer
-
-Always selects the least-loaded server.
-
-Example:
-
-Node-A : 2 Pods
-Node-B : 1 Pod
-Node-C : 3 Pods
-
-Next pod is assigned to Node-B.
-
-Complexity
-
-O(log N)
-2.6 Implementation Approach
-Step 1: Service Registration
-Services inserted into Trie.
-Prefix search supported.
-Step 2: Configuration Management
-Configuration snapshots stored in Stack.
-Rollback performed using pop operation.
-Step 3: Pod Scheduling
-Pod requests added to Queue.
-Processed in FIFO order.
-Step 4: Container Tracking
-Hash Map stores container-server mappings.
-Instant lookup supported.
-Step 5: Resource Ranking
-Containers inserted into Min Heap.
-Extracted based on minimum memory requirement.
-Step 6: Network Modeling
-Servers represented as graph vertices.
-Links represented as weighted edges.
-Step 7: Route Optimization
-Dijkstra computes minimum latency paths.
-Step 8: Load Distribution
-Least-loaded server selected using Min Heap.
-Pod assigned and load updated.
-2.7 Time and Space Complexity Analysis
-Component	Operation	Time Complexity	Space Complexity
-Trie	Insert	O(L)	O(N×L)
-Trie	Prefix Search	O(L+K)	O(N×L)
-Stack	Push/Pop	O(1)	O(H)
-Queue	Enqueue/Dequeue	O(1)	O(Q)
-Hash Map	Lookup	O(1) Avg	O(N)
-Min Heap	Insert	O(log N)	O(N)
-Min Heap	Extract Min	O(log N)	O(N)
-Graph	Storage	O(V+E)	O(V+E)
-Dijkstra	Shortest Path	O((V+E)logV)	O(V)
-Load Balancer	Assign Pod	O(log N)	O(N)
+N = Number of elements
+L = Length of string
+V = Vertices
+E = Edges
+H = History depth
+Q = Queue size
 2.8 Execution Steps
-Compile
+Compilation
 g++ -std=c++17 -O2 -Wall kuberoute.cpp -o kuberoute
 Run
 ./kuberoute
-Program Flow
-Start
- ↓
+Execution Flow
 Initialize Dispatcher
- ↓
-Run Trie Demo
- ↓
-Run Stack Demo
- ↓
-Run Queue Demo
- ↓
-Run Hash Map Demo
- ↓
-Run Heap Demo
- ↓
-Run Graph Demo
- ↓
-Run Dijkstra Demo
- ↓
-Run Load Balancer Demo
- ↓
-Display Summary
- ↓
-End
+Initialize Server Mesh
+Execute Trie Demonstration
+Execute Stack Demonstration
+Execute Queue Demonstration
+Execute Hash Map Demonstration
+Execute Heap Demonstration
+Execute Graph Demonstration
+Execute Dijkstra Demonstration
+Execute Load Balancer Demonstration
+Display Final Summary
 2.9 Sample Inputs and Outputs
-Service Prefix Search
 Input
-Prefix = "pay"
-Output
+
+Service Registration
+
 payment-svc
 payment-gateway
 payment-callback
-Configuration Rollback
-Input
-Version 1
-Version 2
-Version 3
-Rollback
 Output
-Version 3 Removed
-Current Version = Version 2
-Container Lookup
+Prefix Search: pay
+
+Found:
+payment-svc
+payment-gateway
+payment-callback
 Input
+
+Container Lookup
+
 container-uuid-001
 Output
-server-node-7
-Shortest Path
+container-uuid-001 -> server-node-7
 Input
-Source = node-dc1-rack1
-Destination = node-dc3-edge
+
+Shortest Path Query
+
+Source: node-dc1-rack1
+Destination: node-dc3-edge
 Output
 Path:
-node-dc1-rack1
-→ node-dc2-rack1
-→ node-dc2-rack2
-→ node-dc3-edge
+node-dc1-rack1 -> node-dc3-edge
 
-Latency = 38 ms
-Workload Balancing
+Latency:
+40 ms
 Input
+
+Pod Distribution
+
 12 Pods
 4 Servers
 Output
-Node-A : 3 Pods
-Node-B : 3 Pods
-Node-C : 3 Pods
-Node-D : 3 Pods
-2.10 Screenshots
+node-A : 3 pods
+node-B : 3 pods
+node-C : 3 pods
+node-D : 3 pods
 
-Add screenshots after running the project:
+Load Spread = 0
 
-Screenshot 1 – Program Startup
-[Insert Startup Console Screenshot]
-Screenshot 2 – Trie Prefix Search
-[Insert Trie Output Screenshot]
-Screenshot 3 – Configuration Rollback
-[Insert Stack Output Screenshot]
-Screenshot 4 – Pod Queue Processing
-[Insert Queue Output Screenshot]
-Screenshot 5 – Hash Map Lookup
-[Insert Lookup Output Screenshot]
-Screenshot 6 – Container Sorting
-[Insert Min Heap Output Screenshot]
-Screenshot 7 – Graph and Dijkstra Output
-[Insert Routing Output Screenshot]
-Screenshot 8 – Workload Balancer Result
-[Insert Load Balancer Screenshot]
+
 2.11 Results and Observations
-Results
-Successfully implemented all eight orchestration subsystems.
-Fast service discovery achieved through Trie.
-Rollback operations executed instantly using Stack.
-Pod launch requests maintained FIFO order using Queue.
-Container lookup achieved near O(1) performance using Hash Map.
-Memory-based ranking performed efficiently using Min Heap.
-Server network modeled effectively using Graph.
-Dijkstra successfully computed optimal routes.
-Workload evenly distributed across servers.
-Observations
-Choosing the correct data structure significantly improves performance.
-Heap-based scheduling is more efficient than repeated sorting.
-Graph algorithms are essential for network routing problems.
-Combining multiple DSA concepts creates a realistic cloud orchestration system.
+Trie successfully performed efficient prefix searches.
+Stack provided instant rollback functionality.
+Queue preserved FIFO execution order.
+Hash Map enabled near-constant-time lookups.
+Min Heap correctly prioritized low-memory containers.
+Graph accurately modeled server topology.
+Dijkstra produced optimal minimum-latency routes.
+Load Balancer distributed pods almost uniformly across servers.
+All subsystems executed successfully without runtime errors.
+The project demonstrated practical applications of core DSA concepts in cloud computing.
 2.12 Conclusion
 
-KubeRoute successfully demonstrates how core Data Structures and Algorithms can be applied to solve real-world cloud orchestration challenges. The system integrates Trie, Stack, Queue, Hash Map, Min Heap, Graph, and Dijkstra’s Algorithm into a single unified dispatcher that supports service discovery, rollback management, pod scheduling, container tracking, route optimization, and workload balancing.
+The KubeRoute – Container Pod Orchestration Dispatcher project successfully demonstrates how Data Structures and Algorithms can be applied to real-world cloud orchestration systems. By integrating Trie, Stack, Queue, Hash Map, Heap, Graph, and Dijkstra’s Algorithm, the system efficiently performs service discovery, rollback management, task scheduling, routing, and load balancing.
 
-The project highlights the practical importance of DSA in large-scale distributed systems and provides a strong foundation for understanding how modern container orchestration platforms such as Kubernetes and Amazon ECS operate internally.
-      
+The project highlights the importance of selecting appropriate data structures for specific tasks and provides a strong foundation for understanding modern container orchestration platforms such as Kubernetes and Docker Swarm. Future enhancements may include dynamic scaling, fault tolerance, monitoring dashboards, and real-time cluster simulation.
